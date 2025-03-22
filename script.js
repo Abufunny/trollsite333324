@@ -220,15 +220,6 @@ document.addEventListener('DOMContentLoaded', function() {
         "Alt+F4 for free Bitcoin."
     ];
     
-    // Create quote element
-    const quoteContainer = document.createElement('div');
-    quoteContainer.className = 'daily-quote';
-    quoteContainer.innerHTML = `
-        <h3>Daily Troll Wisdom:</h3>
-        <p id="quote">${trollQuotes[Math.floor(Math.random() * trollQuotes.length)]}</p>
-        <button id="newQuote">New Quote</button>
-    `;
-    
     // Insert after hero section
     const heroSection = document.querySelector('.hero');
     if (heroSection) {
