@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading Your Content...</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        
+        .loading-container {
+            text-align: center;
+            width: 80%;
+            max-width: 500px;
+        }
+        
+        .loading-text {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .loading-bar-container {
+            width: 100%;
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        .loading-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #4CAF50;
+            border-radius: 10px;
+            transition: width 0.5s;
+        }
+        
+        .loading-percentage {
+            font-size: 18px;
+            color: #666;
+        }
+        
+        .troll-face {
+            display: none;
+            width: 300px;
+            height: auto;
+            margin-top: 20px;
+        }
+        
+        .troll-message {
+            display: none;
+            font-size: 36px;
+            color: #ff5722;
+            margin-top: 20px;
+            font-family: 'Comic Sans MS', cursive;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <div class="loading-text">Loading Your Content...</div>
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loading-bar"></div>
+        </div>
+        <div class="loading-percentage" id="loading-percentage">0%</div>
+    </div>
+    
+    <img src="../images/11.png" class="troll-face" id="troll-face" alt="Troll Face">
+    <div class="troll-message" id="troll-message">تحميل الصبر... فشل في العثور على الملف</div>
+    
+    <!-- Loading audio and reveal sound -->
+    <audio id="loading-audio" loop>
+        <source src="https://www.myinstants.com/media/sounds/elevator-music.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="reveal-audio">
+        <source src="https://www.myinstants.com/media/sounds/fail-trombone-01.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        const loadingBar = document.getElementById('loading-bar');
+        const loadingPercentage = document.getElementById('loading-percentage');
+        const trollFace = document.getElementById('troll-face');
+        const trollMessage = document.getElementById('troll-message');
+        const loadingAudio = document.getElementById('loading-audio');
+        const revealAudio = document.getElementById('reveal-audio');
+        
+        // Start playing loading music
+        document.addEventListener('click', function() {
+            loadingAudio.volume = 0.3;
+            loadingAudio.play();
+        });
+        
+        let percentage = 0;
+        let loadingSpeed = 1;
+        let slowdownPoint = 95;
+        
+        // Simulate loading progress
+        const loadingInterval = setInterval(() => {
+            if (percentage < slowdownPoint) {
+                // Normal loading speed until 95%
+                percentage += loadingSpeed;
+            } else {
+                // Super slow loading after 95%
+                percentage += 0.01;
+                
+                // At 99.5%, just stop completely
+                if (percentage >= 99.5) {
+                    clearInterval(loadingInterval);
+                    
+                    // Wait 3 seconds then show the troll face
+                    setTimeout(() => {
+                        loadingAudio.pause();
+                        revealAudio.volume = 0.7;
+                        revealAudio.play();
+                        
+                        loadingBar.style.width = '0%';
+                        loadingPercentage.style.display = 'none';
+                        document.querySelector('.loading-text').style.display = 'none';
+                        trollFace.style.display = 'block';
+                        trollMessage.style.display = 'block';
+                    }, 3000);
+                }
+            }
+            
+            // Update the loading bar and percentage display
+            loadingBar.style.width = percentage + '%';
+            loadingPercentage.textContent = Math.floor(percentage) + '%';
+            
+            // As we get closer to the end, slow down more
+            if (percentage > 50 && percentage < slowdownPoint) {
+                loadingSpeed = 0.5;
+            }
+            
+        }, 100);
+        
+        // Make it difficult to leave the page
+        window.onbeforeunload = function() {
+            return "Please wait, your content is still loading...";
+        };
+    </script>
+</body>
+</html> 

@@ -13,11 +13,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Fix issue with links not working
     // Get all important navigation links and ensure they work properly
-    const importantLinks = document.querySelectorAll('a[href="reviews.html"], a[href="troll-university.html"], a[href="index.html"], a[href="spin-wheel.html"]');
+    const importantLinks = document.querySelectorAll('a[href="./reviews/index.html"], a[href="../reviews/index.html"], a[href="troll-university.html"], a[href="index.html"], a[href="spin-wheel.html"]');
     
     importantLinks.forEach(link => {
         // Remove any click event listeners that might be interfering
         const oldLink = link.cloneNode(true);
+        oldLink.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent other handlers from interfering
+        });
         link.parentNode.replaceChild(oldLink, link);
     });
     
@@ -31,8 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('forgot-password')
     ];
     
-    // Also exclude nav links 
-    const navLinks = document.querySelectorAll('nav a');
+    // Also exclude nav links and important links
+    const navLinks = document.querySelectorAll('nav a, .nav-links a, a[href="./reviews/index.html"], a[href="../reviews/index.html"]');
     // Add nav links to excluded elements
     navLinks.forEach(link => {
         excludedElements.push(link);
@@ -45,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Check if we're on the reviews page
-    const isReviewsPage = window.location.pathname.includes('reviews.html');
+    const isReviewsPage = window.location.pathname.includes('/reviews/index.html');
     
     // Only apply troll behavior to elements with specific class 'troll-redirect'
     const trollRedirects = document.querySelectorAll('.troll-redirect');
@@ -57,13 +60,13 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // List of troll pages
             const trollPages = [
-                'troll-pages/troll1.html',  // Classic Troll
-                'troll-pages/troll2.html',  // Animated Troll
-                'troll-pages/troll3.html',  // Earrape Troll
-                'troll-pages/troll4.html',  // Fake Loading Troll
-                'troll-pages/troll5.html',  // Jumpscare Troll
-                'troll-pages/troll6.html',  // Fake Virus Scanner Troll
-                'troll-pages/troll7.html'   // Impossible Maze Troll
+                'troll-pages/troll1/index.html',  // Classic Troll
+                'troll-pages/troll2/index.html',  // Animated Troll
+                'troll-pages/troll3/index.html',  // Earrape Troll
+                'troll-pages/troll4/index.html',  // Fake Loading Troll
+                'troll-pages/troll5/index.html',  // Jumpscare Troll
+                'troll-pages/troll6/index.html',  // Fake Virus Scanner Troll
+                'troll-pages/troll7/index.html'   // Impossible Maze Troll
             ];
             
             // Select a random troll page
