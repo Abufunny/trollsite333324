@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch Me If You Can</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #e0f7fa;
+            height: 100vh;
+            font-family: 'Comic Sans MS', cursive;
+            cursor: pointer;
+        }
+        
+        .troll-face {
+            position: absolute;
+            width: 150px;
+            height: auto;
+            transition: all 0.2s ease-out;
+            cursor: pointer;
+            z-index: 10;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+        }
+        
+        .message {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 36px;
+            color: #ff5722;
+            text-shadow: 2px 2px 4px #000;
+            pointer-events: none;
+        }
+
+        .score {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #2196f3;
+            text-shadow: 1px 1px 2px #000;
+            z-index: 100;
+        }
+
+        .multiplier {
+            position: fixed;
+            top: 50px;
+            right: 20px;
+            font-size: 20px;
+            color: #4caf50;
+            text-shadow: 1px 1px 2px #000;
+            z-index: 100;
+        }
+
+        .timer {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: #f44336;
+            text-shadow: 1px 1px 2px #000;
+            z-index: 100;
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            animation: particle 1s ease-out forwards;
+        }
+
+        @keyframes particle {
+            0% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .rainbow {
+            animation: rainbow 2s linear infinite;
+        }
+
+        @keyframes rainbow {
+            0% { filter: hue-rotate(0deg) drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
+            100% { filter: hue-rotate(360deg) drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
+        }
+
+        .win-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+            z-index: 1000;
+        }
+
+        .win-screen.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .win-image {
+            width: 400px;
+            height: auto;
+            margin-bottom: 30px;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .win-message {
+            font-size: 36px;
+            color: #fff;
+            text-align: center;
+            margin-top: 20px;
+            font-family: 'Arial', sans-serif;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            direction: rtl;
+        }
+
+        .final-score {
+            font-size: 48px;
+            color: #4caf50;
+            margin-top: 20px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .obstacle {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background-color: #ff9800;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            z-index: 5;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .power-up {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #9c27b0;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            color: white;
+            box-shadow: 0 0 15px rgba(156, 39, 176, 0.7);
+            z-index: 5;
+            animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <img src="../images/9.png" class="troll-face" alt="Troll Face">
+    <div class="message">كريستيانو رونالدو يسرق شاورما من ايلون ماسك 🏃‍♂️🥙</div>
+    <div class="score">Score: 0</div>
+    <div class="multiplier">Combo: x1</div>
+    <div class="timer">Time: 30s</div>
+    
+    <div class="win-screen" id="winScreen">
+        <img src="https://i.pinimg.com/736x/89/07/67/890767092d9a8409075d642398acd162.jpg" alt="Troll Face" class="win-image">
+        <div class="win-message">تم نكح الخوارزمية بنجاح</div>
+        <div class="final-score" id="finalScore">Final Score: 0</div>
+    </div>
+    
+    <script>
+        // Create audio elements programmatically
+        const chaseAudio = new Audio("https://www.myinstants.com/media/sounds/benny-hill-theme_1.mp3");
+        const popSound = new Audio("../sounds/pop.mp3");
+        const nomNomSound = new Audio("https://www.myinstants.com/media/sounds/nom-nom-nom.mp3");
+        const powerUpSound = new Audio("https://www.myinstants.com/media/sounds/mario-coin-sound.mp3");
+        
+        // Preload all sounds
+        function preloadSounds() {
+            chaseAudio.load();
+            popSound.load();
+            nomNomSound.load();
+            powerUpSound.load();
+            
+            // Set volume to prevent echoing
+            chaseAudio.volume = 0.5;
+            popSound.volume = 0.5;
+            nomNomSound.volume = 0.5;
+            powerUpSound.volume = 0.5;
+            
+            // Loop the chase music
+            chaseAudio.loop = true;
+        }
+        preloadSounds();
+        
+        const trollFace = document.querySelector('.troll-face');
+        const scoreDisplay = document.querySelector('.score');
+        const multiplierDisplay = document.querySelector('.multiplier');
+        const timerDisplay = document.querySelector('.timer');
+        const winScreen = document.getElementById('winScreen');
+        const finalScore = document.getElementById('finalScore');
+        
+        let score = 0;
+        let combo = 1;
+        let lastClickTime = Date.now();
+        let isRainbow = false;
+        let timeLeft = 30;
+        let gameActive = true;
+        let timerInterval;
+        let obstacles = [];
+        let powerUps = [];
+        
+        // Play audio on page interaction with fallback
+        function playSound(sound) {
+            // Reset the sound if it's not the background music
+            if (sound !== chaseAudio) {
+                sound.pause();
+                sound.currentTime = 0;
+            }
+            
+            // Try to play with promise
+            const playPromise = sound.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    // Playback started successfully
+                }).catch(error => {
+                    console.error("Audio play error:", error);
+                    
+                    // Fallback method: Create a new Audio element
+                    const newSound = new Audio(sound.src);
+                    newSound.volume = 0.5;
+                    newSound.play().catch(e => console.error("New audio error:", e));
+                });
+            }
+        }
+
+        // Start game timer
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = `Time: ${timeLeft}s`;
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+                
+                // Add obstacles and power-ups randomly
+                if (Math.random() < 0.05) {
+                    createObstacle();
+                }
+                
+                if (Math.random() < 0.03) {
+                    createPowerUp();
+                }
+            }, 1000);
+        }
+        
+        function createParticles(x, y, color = null) {
+            for (let i = 0; i < 8; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                
+                // Use provided color or random color
+                const particleColor = color || `hsl(${Math.random() * 360}, 100%, 50%)`;
+                particle.style.backgroundColor = particleColor;
+                
+                particle.style.width = '10px';
+                particle.style.height = '10px';
+                particle.style.borderRadius = '50%';
+                document.body.appendChild(particle);
+                
+                // Remove particle after animation
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        function moveRandomly() {
+            const maxX = window.innerWidth - 150;
+            const maxY = window.innerHeight - 150;
+            const newX = Math.random() * maxX;
+            const newY = Math.random() * maxY;
+            
+            trollFace.style.left = newX + 'px';
+            trollFace.style.top = newY + 'px';
+        }
+
+        function updateScore(points) {
+            if (!gameActive) return;
+            
+            score += points * combo;
+            scoreDisplay.textContent = `Score: ${score}`;
+            
+            // Update combo
+            const now = Date.now();
+            if (now - lastClickTime < 1000) {
+                combo++;
+                if (combo >= 10 && !isRainbow) {
+                    isRainbow = true;
+                    trollFace.classList.add('rainbow');
+                }
+            } else {
+                combo = 1;
+                if (isRainbow) {
+                    isRainbow = false;
+                    trollFace.classList.remove('rainbow');
+                }
+            }
+            multiplierDisplay.textContent = `Combo: x${combo}`;
+            lastClickTime = now;
+            
+            // Check for win condition
+            if (score >= 1000) {
+                endGame(true);
+            }
+        }
+        
+        function createObstacle() {
+            if (!gameActive) return;
+            
+            const obstacle = document.createElement('div');
+            obstacle.className = 'obstacle';
+            obstacle.textContent = '💥';
+            
+            const maxX = window.innerWidth - 80;
+            const maxY = window.innerHeight - 80;
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+            
+            obstacle.style.left = x + 'px';
+            obstacle.style.top = y + 'px';
+            
+            document.body.appendChild(obstacle);
+            obstacles.push(obstacle);
+            
+            // Remove obstacle after some time
+            setTimeout(() => {
+                if (obstacle.parentNode) {
+                    obstacle.remove();
+                }
+                obstacles = obstacles.filter(o => o !== obstacle);
+            }, 5000);
+        }
+        
+        function createPowerUp() {
+            if (!gameActive) return;
+            
+            const powerUp = document.createElement('div');
+            powerUp.className = 'power-up';
+            powerUp.textContent = '⭐';
+            
+            const maxX = window.innerWidth - 50;
+            const maxY = window.innerHeight - 50;
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+            
+            powerUp.style.left = x + 'px';
+            powerUp.style.top = y + 'px';
+            
+            document.body.appendChild(powerUp);
+            powerUps.push(powerUp);
+            
+            // Remove power-up after some time
+            setTimeout(() => {
+                if (powerUp.parentNode) {
+                    powerUp.remove();
+                }
+                powerUps = powerUps.filter(p => p !== powerUp);
+            }, 7000);
+            
+            // Add click event to power-up
+            powerUp.addEventListener('click', (e) => {
+                e.stopPropagation();
+                collectPowerUp(powerUp);
+            });
+        }
+        
+        function collectPowerUp(powerUp) {
+            if (!gameActive) return;
+            
+            // Apply power-up effect
+            playSound(powerUpSound);
+            
+            // Random power-up effect
+            const effect = Math.floor(Math.random() * 3);
+            switch (effect) {
+                case 0: // Extra time
+                    timeLeft += 10;
+                    timerDisplay.textContent = `Time: ${timeLeft}s`;
+                    createParticles(parseFloat(powerUp.style.left) + 25, parseFloat(powerUp.style.top) + 25, '#4caf50');
+                    break;
+                case 1: // Score boost
+                    updateScore(50);
+                    createParticles(parseFloat(powerUp.style.left) + 25, parseFloat(powerUp.style.top) + 25, '#f44336');
+                    break;
+                case 2: // Combo boost
+                    combo += 5;
+                    multiplierDisplay.textContent = `Combo: x${combo}`;
+                    createParticles(parseFloat(powerUp.style.left) + 25, parseFloat(powerUp.style.top) + 25, '#2196f3');
+                    break;
+            }
+            
+            // Remove the power-up
+            powerUp.remove();
+            powerUps = powerUps.filter(p => p !== powerUp);
+        }
+        
+        function checkCollisions() {
+            if (!gameActive) return;
+            
+            const trollRect = trollFace.getBoundingClientRect();
+            
+            // Check collision with obstacles
+            obstacles.forEach(obstacle => {
+                const obstacleRect = obstacle.getBoundingClientRect();
+                
+                if (!(
+                    trollRect.right < obstacleRect.left || 
+                    trollRect.left > obstacleRect.right || 
+                    trollRect.bottom < obstacleRect.top || 
+                    trollRect.top > obstacleRect.bottom
+                )) {
+                    // Collision detected
+                    hitObstacle(obstacle);
+                }
+            });
+        }
+        
+        function hitObstacle(obstacle) {
+            if (!gameActive) return;
+            
+            // Apply penalty
+            combo = 1;
+            multiplierDisplay.textContent = `Combo: x${combo}`;
+            
+            // Visual effect
+            createParticles(parseFloat(obstacle.style.left) + 40, parseFloat(obstacle.style.top) + 40, '#ff9800');
+            
+            // Remove the obstacle
+            obstacle.remove();
+            obstacles = obstacles.filter(o => o !== obstacle);
+        }
+        
+        function endGame(win = false) {
+            gameActive = false;
+            clearInterval(timerInterval);
+            
+            // Stop background music
+            chaseAudio.pause();
+            
+            // Show win screen
+            finalScore.textContent = `Final Score: ${score}`;
+            winScreen.classList.add('show');
+            
+            // Always play win sound, whether win by time or score
+            setTimeout(() => {
+                playSound(nomNomSound);
+            }, 1000);
+        }
+
+        // Click event for the troll face
+        trollFace.addEventListener('click', (e) => {
+            if (!gameActive) return;
+            
+            e.stopPropagation();
+            updateScore(10);
+            createParticles(e.pageX, e.pageY);
+            moveRandomly();
+            
+            playSound(popSound);
+        });
+
+        // Initial position
+        moveRandomly();
+
+        // Make troll face dodge the cursor
+        document.addEventListener('mousemove', (e) => {
+            if (!gameActive) return;
+            
+            const rect = trollFace.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            const distance = Math.hypot(e.clientX - centerX, e.clientY - centerY);
+            
+            if (distance < 200) {
+                const angle = Math.atan2(centerY - e.clientY, centerX - e.clientX);
+                const newX = centerX + Math.cos(angle) * 100;
+                const newY = centerY + Math.sin(angle) * 100;
+                
+                trollFace.style.left = Math.max(0, Math.min(window.innerWidth - 150, newX - 75)) + 'px';
+                trollFace.style.top = Math.max(0, Math.min(window.innerHeight - 150, newY - 75)) + 'px';
+            }
+        });
+        
+        // Start game when user interacts with the page
+        document.addEventListener('click', function startGame() {
+            // Start the background music
+            playSound(chaseAudio);
+            
+            // Start the timer
+            startTimer();
+            
+            // Check for collisions regularly
+            setInterval(checkCollisions, 100);
+            
+            // Remove this event listener after first click
+            document.removeEventListener('click', startGame);
+        }, { once: true });
+
+        // Make it difficult to leave
+        window.onbeforeunload = function() {
+            return "The chase isn't over yet! Are you giving up? 😏";
+        }
+    </script>
+</body>
+</html>

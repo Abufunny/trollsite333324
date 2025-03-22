@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Game</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: #1a1a1a;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            color: white;
+            cursor: pointer;
+        }
+
+        .game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .target {
+            position: absolute;
+            padding: 15px 30px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            user-select: none;
+            z-index: 1;
+        }
+
+        .target:hover {
+            transform: scale(0.8);
+        }
+
+        .score {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            z-index: 2;
+        }
+
+        .timer {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: #ff9800;
+            z-index: 2;
+        }
+
+        .level-indicator {
+            position: fixed;
+            top: 50px;
+            right: 20px;
+            font-size: 24px;
+            color: #4caf50;
+            z-index: 2;
+        }
+
+        .obstacle {
+            position: absolute;
+            width: 100px;
+            height: 20px;
+            background: #666;
+            border-radius: 3px;
+            z-index: 1;
+        }
+
+        .level-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            color: #fff;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 3;
+        }
+
+        .troll-image {
+            position: absolute;
+            width: 200px;
+            height: auto;
+            z-index: 2;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+            transition: transform 0.3s ease;
+        }
+
+        .troll-image:hover {
+            transform: scale(1.1);
+        }
+
+        .win-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+            z-index: 1000;
+        }
+
+        .win-screen.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .win-image {
+            width: 300px;
+            height: auto;
+            margin-bottom: 30px;
+            animation: float 2s ease-in-out infinite;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+        }
+
+        .win-message {
+            font-size: 36px;
+            color: #fff;
+            text-align: center;
+            margin-top: 20px;
+            font-family: 'Arial', sans-serif;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            direction: rtl;
+        }
+
+        .level-reached {
+            font-size: 28px;
+            color: #4caf50;
+            margin-top: 20px;
+        }
+        
+        .final-score {
+            font-size: 24px;
+            color: #ff9800;
+            margin-top: 15px;
+        }
+        
+        .try-again-btn {
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: #ff4444;
+            color: white;
+            font-size: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .try-again-btn:hover {
+            transform: scale(1.1);
+            background: #ff2222;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            animation: particle 1s ease-out forwards;
+        }
+
+        @keyframes particle {
+            0% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <div class="score">Score: <span id="scoreValue">0</span></div>
+        <div class="timer">Time: <span id="timeValue">30</span>s</div>
+        <div class="level-indicator">Level: <span id="levelValue">1</span></div>
+        <button class="target" id="target">Click Me!</button>
+        <div class="level-message" id="levelMessage"></div>
+    </div>
+
+    <div class="win-screen" id="winScreen">
+        <img src="https://i.pinimg.com/736x/d9/8f/36/d98f361e914c434d2205a55dd0ed1789.jpg" alt="Troll Face" class="win-image" id="winImage">
+        <div class="win-message" id="winMessage"></div>
+        <div class="level-reached" id="levelReached"></div>
+        <div class="final-score">Final Score: <span id="finalScoreValue">0</span></div>
+        <div class="try-again-btn" id="tryAgainBtn">Try Again</div>
+    </div>
+
+    <script>
+        const gameContainer = document.getElementById('gameContainer');
+        const target = document.getElementById('target');
+        const scoreValue = document.getElementById('scoreValue');
+        const timeValue = document.getElementById('timeValue');
+        const levelValue = document.getElementById('levelValue');
+        const levelMessage = document.getElementById('levelMessage');
+        const winScreen = document.getElementById('winScreen');
+        const winMessage = document.getElementById('winMessage');
+        const winImage = document.getElementById('winImage');
+        const levelReached = document.getElementById('levelReached');
+        const finalScoreValue = document.getElementById('finalScoreValue');
+        const tryAgainBtn = document.getElementById('tryAgainBtn');
+
+        // Create audio elements programmatically
+        const clickSound = new Audio("https://www.myinstants.com/media/sounds/click.mp3");
+        const levelUpSound = new Audio("https://www.myinstants.com/media/sounds/level-up-sound-effect.mp3");
+        const winSound = new Audio("https://www.myinstants.com/media/sounds/tada-fanfare-a-6313.mp3");
+        const nomNomSound = new Audio("https://www.myinstants.com/media/sounds/nom-nom-nom.mp3");
+        const tickSound = new Audio("https://www.myinstants.com/media/sounds/clock-ticking-2.mp3");
+
+        // Preload all sounds
+        function preloadSounds() {
+            clickSound.load();
+            levelUpSound.load();
+            winSound.load();
+            nomNomSound.load();
+            tickSound.load();
+            
+            // Set volume
+            clickSound.volume = 0.5;
+            levelUpSound.volume = 0.5;
+            winSound.volume = 0.5;
+            nomNomSound.volume = 0.5;
+            tickSound.volume = 0.3;
+        }
+        preloadSounds();
+
+        let score = 0;
+        let level = 1;
+        let obstacles = [];
+        let trollImages = [];
+        let timeLeft = 30;
+        let gameActive = true;
+        let timerInterval;
+        
+        const arabicMessages = [
+            "خطأ: القهوة غير موجودة",
+            "جاري تحميل الشاورما...",
+            "تم حذف العقل بنجاح",
+            "الملف نائم الآن",
+            "المجلد يرقص في المطبخ",
+            "تحذير: البرمجة تسبب الضحك",
+            "خطأ 404: المنطق غير موجود",
+            "تم تثبيت النعاس بنجاح",
+            "جاري تحميل السعادة...",
+            "تم حذف الحزن بنجاح"
+        ];
+
+        const trollFaces = [
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwT0kV4HstJpXawEJDUDKbKzvYvKRLSF0Lpw&s'
+        ];
+
+        // Start the game timer
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timeValue.textContent = timeLeft;
+                
+                // Play tick sound when time is running low
+                if (timeLeft <= 10) {
+                    playSound(tickSound);
+                }
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+        
+        function endGame() {
+            gameActive = false;
+            clearInterval(timerInterval);
+            showWinScreen();
+        }
+
+        function moveTarget() {
+            if (!gameActive) return;
+            
+            const maxX = gameContainer.clientWidth - 100;
+            const maxY = gameContainer.clientHeight - 100;
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+            
+            target.style.left = x + 'px';
+            target.style.top = y + 'px';
+        }
+
+        function addObstacle() {
+            if (!gameActive) return;
+            
+            const obstacle = document.createElement('div');
+            obstacle.className = 'obstacle';
+            
+            const maxX = gameContainer.clientWidth - 100;
+            const maxY = gameContainer.clientHeight - 20;
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+            
+            obstacle.style.left = x + 'px';
+            obstacle.style.top = y + 'px';
+            
+            // Random rotation
+            const rotation = Math.random() * 360;
+            obstacle.style.transform = `rotate(${rotation}deg)`;
+            
+            gameContainer.appendChild(obstacle);
+            obstacles.push(obstacle);
+        }
+
+        function addTrollImage() {
+            if (!gameActive) return;
+            
+            const img = document.createElement('img');
+            img.className = 'troll-image';
+            img.src = trollFaces[Math.floor(Math.random() * trollFaces.length)];
+            
+            // Increased size to 200px (from 100px)
+            const maxX = gameContainer.clientWidth - 200;
+            const maxY = gameContainer.clientHeight - 200;
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+            
+            img.style.left = x + 'px';
+            img.style.top = y + 'px';
+            
+            gameContainer.appendChild(img);
+            trollImages.push(img);
+            
+            // Make images follow the target
+            setTimeout(() => {
+                if (gameActive && img.parentNode) {
+                    followTarget(img);
+                }
+            }, 2000);
+        }
+        
+        function followTarget(img) {
+            if (!gameActive || !img.parentNode) return;
+            
+            const targetRect = target.getBoundingClientRect();
+            const imgRect = img.getBoundingClientRect();
+            
+            const targetX = targetRect.left + targetRect.width / 2;
+            const targetY = targetRect.top + targetRect.height / 2;
+            const imgX = imgRect.left + imgRect.width / 2;
+            const imgY = imgRect.top + imgRect.height / 2;
+            
+            // Calculate direction to move
+            const dx = targetX - imgX;
+            const dy = targetY - imgY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            // Only move if not too close
+            if (distance > 50) {
+                const speed = 5;
+                const moveX = dx / distance * speed;
+                const moveY = dy / distance * speed;
+                
+                const newX = parseFloat(img.style.left) + moveX;
+                const newY = parseFloat(img.style.top) + moveY;
+                
+                img.style.left = `${newX}px`;
+                img.style.top = `${newY}px`;
+            }
+            
+            // Continue following
+            if (gameActive) {
+                requestAnimationFrame(() => followTarget(img));
+            }
+        }
+
+        function createParticles(x, y) {
+            for (let i = 0; i < 8; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                particle.style.width = '10px';
+                particle.style.height = '10px';
+                particle.style.borderRadius = '50%';
+                document.body.appendChild(particle);
+                
+                // Remove particle after animation
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        function showLevelMessage(text) {
+            levelMessage.textContent = text;
+            levelMessage.style.opacity = '1';
+            
+            setTimeout(() => {
+                levelMessage.style.opacity = '0';
+            }, 2000);
+        }
+
+        // Play sound with multiple fallbacks
+        function playSound(sound) {
+            // Reset the sound if it's not the tick sound
+            if (sound !== tickSound) {
+                sound.pause();
+                sound.currentTime = 0;
+            }
+            
+            // Try to play with promise
+            const playPromise = sound.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    // Playback started successfully
+                }).catch(error => {
+                    console.error("Audio play error:", error);
+                    
+                    // Fallback method: Create a new Audio element
+                    const newSound = new Audio(sound.src);
+                    newSound.volume = sound.volume;
+                    newSound.play().catch(e => console.error("New audio error:", e));
+                });
+            }
+        }
+
+        function showWinScreen() {
+            winMessage.textContent = arabicMessages[Math.floor(Math.random() * arabicMessages.length)];
+            levelReached.textContent = `You reached Level ${level}!`;
+            finalScoreValue.textContent = score;
+            winScreen.classList.add('show');
+            
+            // Play win sound
+            playSound(winSound);
+            
+            // Play nom-nom sound after a delay
+            setTimeout(() => {
+                playSound(nomNomSound);
+            }, 1000);
+        }
+
+        target.addEventListener('click', (event) => {
+            if (!gameActive) return;
+            
+            playSound(clickSound);
+            
+            score++;
+            scoreValue.textContent = score;
+            createParticles(event.clientX, event.clientY);
+            moveTarget();
+            
+            if (score % 5 === 0) {
+                level++;
+                levelValue.textContent = level;
+                playSound(levelUpSound);
+                showLevelMessage(`Level ${level}!`);
+                
+                if (level <= 3) {
+                    addObstacle();
+                } else {
+                    addTrollImage();
+                }
+            }
+            
+            if (score >= 30) {
+                endGame();
+            }
+        });
+        
+        // Check if target is under a troll image
+        function checkTargetCoverage() {
+            if (!gameActive) return;
+            
+            const targetRect = target.getBoundingClientRect();
+            
+            for (const img of trollImages) {
+                const imgRect = img.getBoundingClientRect();
+                
+                // Check if the image overlaps with the target
+                if (!(
+                    targetRect.right < imgRect.left || 
+                    targetRect.left > imgRect.right || 
+                    targetRect.bottom < imgRect.top || 
+                    targetRect.top > imgRect.bottom
+                )) {
+                    // Target is covered, move it
+                    moveTarget();
+                    break;
+                }
+            }
+            
+            // Continue checking
+            if (gameActive) {
+                requestAnimationFrame(checkTargetCoverage);
+            }
+        }
+        
+        // Initialize game
+        moveTarget();
+        startTimer();
+        checkTargetCoverage();
+
+        // Make it difficult to leave
+        window.onbeforeunload = function() {
+            return "You're so close to winning! Are you sure you want to leave?";
+        }
+        
+        // Enable audio on first user interaction
+        document.addEventListener('click', function enableAudio() {
+            // Create a silent audio context to enable audio
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const silentBuffer = audioContext.createBuffer(1, 1, 22050);
+            const source = audioContext.createBufferSource();
+            source.buffer = silentBuffer;
+            source.connect(audioContext.destination);
+            source.start();
+            
+            document.removeEventListener('click', enableAudio);
+        }, { once: true });
+
+        // Try again button functionality
+        tryAgainBtn.addEventListener('click', () => {
+            // Reset game state
+            score = 0;
+            level = 1;
+            timeLeft = 30;
+            gameActive = true;
+            
+            // Clear all troll images
+            trollImages.forEach(img => img.remove());
+            trollImages = [];
+            
+            // Clear all obstacles
+            obstacles.forEach(obs => obs.remove());
+            obstacles = [];
+            
+            // Reset UI
+            scoreValue.textContent = score;
+            levelValue.textContent = level;
+            timeValue.textContent = timeLeft;
+            
+            // Hide win screen
+            winScreen.classList.remove('show');
+            
+            // Restart game
+            moveTarget();
+            startTimer();
+            checkTargetCoverage();
+        });
+    </script>
+</body>
+</html>

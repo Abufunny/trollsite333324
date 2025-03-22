@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blue Screen of Troll</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            cursor: none;
+            background: #0078d7;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: white;
+        }
+
+        .crack {
+            position: fixed;
+            background: #000;
+            transform-origin: center;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .glitch-text {
+            position: fixed;
+            color: #ff0000;
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            text-shadow: 2px 2px #000;
+            pointer-events: none;
+            z-index: 101;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s;
+        }
+
+        .message-popup {
+            position: fixed;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            z-index: 102;
+            text-align: center;
+            transform: scale(0);
+            transition: transform 0.3s;
+        }
+
+        .message-text {
+            font-size: 24px;
+            margin-bottom: 10px;
+            direction: rtl;
+            color: #000000;
+        }
+
+        .troll-image {
+            width: 100px;
+            height: auto;
+            margin: 10px;
+        }
+
+        .custom-cursor {
+            width: 20px;
+            height: 20px;
+            background: url('../images/troll-cursor.png');
+            background-size: contain;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+
+        .glitch {
+            animation: glitch 0.3s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shake 0.1s infinite;
+        }
+
+        .win-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+            z-index: 1000;
+        }
+
+        .win-screen.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .win-image {
+            width: 400px;
+            height: auto;
+            margin-bottom: 30px;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .win-message {
+            font-size: 36px;
+            color: #fff;
+            text-align: center;
+            margin-top: 20px;
+            font-family: 'Arial', sans-serif;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            direction: rtl;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .bsod-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #0078d7;
+            color: white;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            padding: 100px 50px;
+            box-sizing: border-box;
+            display: none;
+            z-index: 103;
+        }
+
+        .bsod-container.show {
+            display: block;
+        }
+
+        .bsod-title {
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        .bsod-text {
+            font-size: 24px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .bsod-code {
+            font-family: 'Courier New', monospace;
+            margin-top: 50px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #005ca1;
+            margin-top: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #00a1ff;
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div id="cursor" class="custom-cursor"></div>
+
+    <div class="bsod-container" id="bsodScreen">
+        <div class="bsod-title">:(</div>
+        <div class="bsod-text">Your PC ran into a problem and needs to restart. We're just collecting some error info, and then we'll restart for you.</div>
+        <div class="bsod-text">0% complete</div>
+        <div class="bsod-code">TROLL_FACE_DETECTED_CRITICAL_PROCESS_DIED</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+            <div class="progress-text">0%</div>
+        </div>
+    </div>
+
+    <div class="win-screen" id="winScreen">
+        <img src="https://i.pinimg.com/736x/6f/81/03/6f8103f70fdeb2b4e7fbbe33a4f04385.jpg" alt="Troll Face" class="win-image">
+        <div class="win-message" id="winMessage"></div>
+    </div>
+
+    <script>
+        // Create audio elements programmatically
+        const glassBreak = new Audio("https://www.myinstants.com/media/sounds/glass-breaking.mp3");
+        const glitchSound = new Audio("https://www.myinstants.com/media/sounds/glitch-sound-effect.mp3");
+        const nomNomSound = new Audio("https://www.myinstants.com/media/sounds/nom-nom-nom.mp3");
+        const errorSound = new Audio("https://www.myinstants.com/media/sounds/error.mp3");
+
+        // Preload all sounds
+        function preloadSounds() {
+            glassBreak.load();
+            glitchSound.load();
+            nomNomSound.load();
+            errorSound.load();
+        }
+        preloadSounds();
+
+        const cursor = document.getElementById('cursor');
+        const winScreen = document.getElementById('winScreen');
+        const winMessage = document.getElementById('winMessage');
+        const bsodScreen = document.getElementById('bsodScreen');
+        const progressFill = document.getElementById('progressFill');
+
+        const arabicMessages = [
+    "تم تحميل التنفس",
+    "تم تعبئة الضحك بنجاح",
+    "جاري تحميل الهواء... الرجاء عدم التنفس",
+    "السيسي قرر فرض ضريبة على الأوكسجين",
+    "تم تحويل الهرم إلى USB بحجم 1 تيرابايت",
+    "تحذير: الفرخة صارت الرئيس الجديد لمجلس الأمن",
+    "جاري تحميل السعادة... الإنترنت بطيء جدًا",
+    "خطأ 808: المكيف هاجر إلى المنوفية",
+    "تحذير: البطيخة أصبحت وسيلة نقل رسمية",
+    "تمت رقية الهرم الأكبر إلى هرم برو ماكس",
+    " جنس وحدة المعالجة المركزية... الرجاء عدم النظر مباشرة"
+];
+        const trollImages = [
+            '../images/26.jpg',
+            '../images/27.png',
+            '../images/28.png',
+            '../images/29.png',
+            '../images/30.jpg'
+        ];
+
+        const errorMessages = [
+            "ERROR: System32 replaced with Troll64",
+            "WARNING: Meme overflow detected",
+            "CRITICAL: Humor module overloaded",
+            "FATAL: Too many laughs per second",
+            "ERROR: Keyboard not connected. Press F1 to continue",
+            "CRITICAL: Mouse cursor has achieved sentience",
+            "WARNING: Coffee not found. Insert cup and press any key",
+            "FATAL: User too awesome for this computer",
+            "ERROR: Task failed successfully",
+            "CRITICAL: PC load letter. What does that even mean?"
+        ];
+
+        let crackCount = 0;
+        let isShaking = false;
+
+        // Play sound with multiple fallbacks
+        function playSound(sound) {
+            // Reset the sound
+            sound.pause();
+            sound.currentTime = 0;
+            
+            // Try to play with promise
+            const playPromise = sound.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    // Playback started successfully
+                }).catch(error => {
+                    console.error("Audio play error:", error);
+                    
+                    // Fallback method: Create a new Audio element
+                    const newSound = new Audio(sound.src);
+                    newSound.volume = 0.7;
+                    newSound.play().catch(e => console.error("New audio error:", e));
+                });
+            }
+        }
+
+        function createCrack(x, y) {
+            const crack = document.createElement('div');
+            crack.className = 'crack';
+            
+            const length = Math.random() * 100 + 50;
+            const angle = Math.random() * 360;
+            const width = Math.random() * 3 + 1;
+            
+            crack.style.width = `${length}px`;
+            crack.style.height = `${width}px`;
+            crack.style.left = `${x - length/2}px`;
+            crack.style.top = `${y - width/2}px`;
+            crack.style.transform = `rotate(${angle}deg)`;
+            
+            document.body.appendChild(crack);
+            
+            crackCount++;
+            
+            // Create additional cracks for a more shattered effect
+            if (Math.random() > 0.5) {
+                for (let i = 0; i < 3; i++) {
+                    const subCrack = document.createElement('div');
+                    subCrack.className = 'crack';
+                    
+                    const subLength = length * 0.6;
+                    const subAngle = angle + (Math.random() * 60 - 30);
+                    const subWidth = width * 0.7;
+                    
+                    subCrack.style.width = `${subLength}px`;
+                    subCrack.style.height = `${subWidth}px`;
+                    subCrack.style.left = `${x - subLength/2 + (Math.random() * 40 - 20)}px`;
+                    subCrack.style.top = `${y - subWidth/2 + (Math.random() * 40 - 20)}px`;
+                    subCrack.style.transform = `rotate(${subAngle}deg)`;
+                    
+                    document.body.appendChild(subCrack);
+                }
+            }
+        }
+
+        function createGlitchText() {
+            const glitchText = document.createElement('div');
+            glitchText.className = 'glitch-text';
+            glitchText.textContent = errorMessages[Math.floor(Math.random() * errorMessages.length)];
+            
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            
+            glitchText.style.left = `${x}px`;
+            glitchText.style.top = `${y}px`;
+            
+            document.body.appendChild(glitchText);
+            
+            setTimeout(() => {
+                glitchText.style.opacity = '1';
+                glitchText.style.transform = 'scale(1)';
+            }, 10);
+            
+            setTimeout(() => {
+                glitchText.style.opacity = '0';
+                setTimeout(() => glitchText.remove(), 300);
+            }, 2000);
+        }
+
+        function createMessagePopup() {
+            const popup = document.createElement('div');
+            popup.className = 'message-popup';
+            
+            const messageText = document.createElement('div');
+            messageText.className = 'message-text';
+            messageText.textContent = arabicMessages[Math.floor(Math.random() * arabicMessages.length)];
+            
+            const imageContainer = document.createElement('div');
+            
+            // Add multiple troll images
+            for (let i = 0; i < 3; i++) {
+                const img = document.createElement('img');
+                img.className = 'troll-image';
+                img.src = trollImages[Math.floor(Math.random() * trollImages.length)];
+                imageContainer.appendChild(img);
+            }
+            
+            popup.appendChild(messageText);
+            popup.appendChild(imageContainer);
+            
+            const x = Math.random() * (window.innerWidth - 300);
+            const y = Math.random() * (window.innerHeight - 200);
+            
+            popup.style.left = `${x}px`;
+            popup.style.top = `${y}px`;
+            
+            document.body.appendChild(popup);
+            
+            setTimeout(() => popup.style.transform = 'scale(1)', 10);
+            
+            setTimeout(() => {
+                popup.style.transform = 'scale(0)';
+                setTimeout(() => popup.remove(), 300);
+            }, 3000);
+        }
+
+        function startShaking() {
+            if (!isShaking) {
+                isShaking = true;
+                document.body.classList.add('shake');
+                
+                setTimeout(() => {
+                    document.body.classList.remove('shake');
+                    isShaking = false;
+                }, 1000);
+            }
+        }
+
+        function showBSOD() {
+            playSound(errorSound);
+            bsodScreen.classList.add('show');
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 5;
+                if (progress > 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    // After BSOD completes, show win screen
+                    setTimeout(showWinScreen, 2000);
+                }
+                
+                progressFill.style.width = `${progress}%`;
+                document.querySelector('.progress-text').textContent = `${Math.floor(progress)}%`;
+                document.querySelector('.bsod-text').textContent = `${Math.floor(progress)}% complete`;
+            }, 500);
+        }
+
+        function showWinScreen() {
+            winMessage.textContent = "كردستان ليست دولة حقيقية";
+            winScreen.classList.add('show');
+            
+            // Play nom-nom sound after a delay - only once
+            setTimeout(() => {
+                // Make sure any previous sounds are stopped
+                nomNomSound.pause();
+                nomNomSound.currentTime = 0;
+                
+                // Set volume lower to prevent echoing
+                nomNomSound.volume = 0.5;
+                
+                // Play the sound
+                nomNomSound.play().catch(e => console.error("Nom sound error:", e));
+                
+                // Don't create additional audio elements to prevent echoing
+            }, 1000);
+        }
+
+        // Custom cursor
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+        });
+        
+        // Click event
+        document.addEventListener('click', (e) => {
+            // Don't process clicks if BSOD or win screen is showing
+            if (!bsodScreen.classList.contains('show') && !winScreen.classList.contains('show')) {
+                playSound(glassBreak);
+                createCrack(e.clientX, e.clientY);
+                
+                if (Math.random() > 0.6) {
+                    playSound(glitchSound);
+                    createGlitchText();
+                }
+                
+                if (Math.random() > 0.6) {
+                    createMessagePopup();
+                }
+                
+                if (Math.random() > 0.5) {
+                    startShaking();
+                }
+                
+                // Add glitch effect to cursor
+                cursor.classList.add('glitch');
+                setTimeout(() => cursor.classList.remove('glitch'), 500);
+                
+                if (crackCount >= 25) {
+                    setTimeout(() => {
+                        showBSOD();
+                    }, 1000);
+                }
+            }
+        });
+        
+        // Make it difficult to leave
+        window.onbeforeunload = function() {
+            return "CRITICAL ERROR: Attempting to escape will cause permanent data loss!";
+        };
+        
+        // Enable audio on first user interaction
+        document.addEventListener('click', function enableAudio() {
+            // Create a silent audio context to enable audio
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const silentBuffer = audioContext.createBuffer(1, 1, 22050);
+            const source = audioContext.createBufferSource();
+            source.buffer = silentBuffer;
+            source.connect(audioContext.destination);
+            source.start();
+            
+            document.removeEventListener('click', enableAudio);
+        }, { once: true });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="The world's most trollish professional services company. Experience our unique approach to business solutions with a twist of humor.">
+    <meta name="keywords" content="troll, humor, business, professional services, trolling">
+    <meta name="author" content="Troll Inc.">
+    <meta property="og:title" content="Professional Troll Services">
+    <meta property="og:description" content="The world's most trollish professional services company with unexpected surprises at every click.">
+    <meta property="og:image" content="./images/5.png">
+    <meta property="og:url" content="https://troll-services.example.com">
+    <title>Professional Troll Services</title>
+    <link rel="stylesheet" href="new-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="https://pngimg.com/d/trollface_PNG29.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #093670;
+            --secondary-color: #0495a8;
+            --dark-bg: #1a1a1a;
+            --light-text: #ffffff;
+            --border-color: #333;
+        }
+
+        /* Chat widget styles */
+        .chat-widget {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background: var(--dark-bg);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            border: 1px solid var(--border-color);
+        }
+
+        .chat-trigger {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 25px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+        }
+
+        .chat-trigger:hover {
+            transform: translateY(-2px);
+        }
+
+        .chat-header {
+            padding: 15px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-close {
+            cursor: pointer;
+            font-size: 20px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .chat-close:hover {
+            opacity: 1;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .user-message, .ai-message {
+            max-width: 80%;
+            padding: 8px 12px;
+            border-radius: 15px;
+            margin: 4px 0;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background: var(--primary-color);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .ai-message {
+            background: var(--secondary-color);
+            color: white;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .chat-input {
+            padding: 10px 15px;
+            display: flex;
+            gap: 8px;
+            border-top: 1px solid var(--border-color);
+            align-items: center;
+            min-height: 50px;
+            background: var(--dark-bg);
+            border-radius: 0 0 10px 10px;
+        }
+
+        #messageInput {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            background: #333;
+            color: white;
+            font-family: inherit;
+            min-width: 0; /* Prevents input from overflowing */
+        }
+
+        #messageInput:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: #404040;
+        }
+
+        .send-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0; /* Prevents button from shrinking */
+            min-width: 60px;
+        }
+
+        .send-button:hover {
+            transform: translateY(-1px);
+        }
+
+        /* Scrollbar styles */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+        
+        .mystery-box {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #845ec2, #ff6b6b);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .mystery-box:hover {
+            transform: translateY(-5px) rotate(10deg);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(45deg, #ff6b6b, #845ec2);
+        }
+
+        /* Contact section styles */
+        #contact {
+            padding: 4rem 0;
+            background: var(--dark-bg);
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 50vh;
+        }
+
+        .contact-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .contact-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+        }
+
+        .contact-content {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .discord-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 36px;
+            background: linear-gradient(45deg, #7289da, #5865f2);
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .discord-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(114, 137, 218, 0.3);
+        }
+
+        .discord-link i {
+            font-size: 1.8rem;
+        }
+        
+        /* Enhanced Donation Section */
+        #donation {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #donation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/cubes.png');
+            opacity: 0.05;
+            z-index: 0;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #f5f5f5, #e0e0e0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 50px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .donation-grid {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: stretch;
+            gap: 30px;
+            padding: 40px 0;
+            width: 100%;
+            perspective: 1000px;
+        }
+
+        .donation-card {
+            flex: 0 0 280px;
+            background: rgba(45, 45, 45, 0.85);
+            backdrop-filter: blur(20px);
+            padding: 30px;
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+                       inset 0 1px 2px rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+
+        .donation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .donation-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5),
+                       inset 0 2px 3px rgba(255, 255, 255, 0.2);
+        }
+
+        .donation-card:hover::before {
+            left: 100%;
+        }
+
+        .donation-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.3);
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3),
+                       inset 0 2px 3px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .donation-icon::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .btn-donate {
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #4a90e2, #2c5282);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-donate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, #5a9fe2, #3c6292);
+        }
+
+        .btn-donate::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .btn-donate:hover::before {
+            left: 100%;
+        }
+
+        .crypto-box {
+            width: 100%;
+            padding: 15px 15px 35px 15px;
+            background: rgba(58, 58, 58, 0.7);
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+            min-height: 130px;
+        }
+
+        .crypto-box:hover {
+            background: rgba(68, 68, 68, 0.8);
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .crypto-box::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%);
+            border-radius: 20px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .crypto-box:hover::after {
+            opacity: 1;
+        }
+
+        .crypto-text {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.7rem;
+            color: #ddd;
+            word-break: break-all;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 5px 10px;
+            border-radius: 8px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 15px;
+        }
+
+        .copy-hint {
+            font-size: 0.8rem;
+            color: #aaa;
+            position: absolute;
+            bottom: 15px;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+
+        .copy-success {
+            font-size: 1rem;
+            color: #4CAF50;
+            font-weight: bold;
+            position: absolute;
+            bottom: 15px;
+            display: none;
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+        
+        /* Donation section styles */
+        #donation {
+            padding: 4rem 0;
+            background: var(--dark-bg);
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 50vh;
+        }
+
+        .donation-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .donation-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+        }
+
+        .donation-methods {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .donation-method {
+            background: #333;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .donation-method h3 {
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .donation-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #7289da, #5865f2);
+            border-radius: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .donation-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(114, 137, 218, 0.3);
+        }
+
+        .donation-link i {
+            font-size: 1.5rem;
+        }
+
+        .crypto-address {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: #444;
+            border-radius: 20px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .crypto-address i {
+            font-size: 1.5rem;
+        }
+
+        .crypto-container {
+            position: relative;
+        }
+
+        .copy-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #333;
+            padding: 5px 10px;
+            border-radius: 10px;
+            color: white;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .crypto-address:hover ~ .copy-message {
+            opacity: 1;
+        }
+
+        .hidden-address {
+            display: none;
+        }
+
+        .full-address {
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+
+        .crypto-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+        }
+
+        .crypto-address:hover .copy-message {
+            display: none;
+        }
+
+        .copied .copy-message {
+            display: block;
+            opacity: 1;
+        }
+        
+        /* New Donation Section Styles */
+        .donation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .donation-card {
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .donation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .donation-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.2);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .donation-icon i {
+            font-size: 30px;
+        }
+
+        .ltc-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .donation-card h3 {
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .btn-donate {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #0070ba;
+            color: white;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-donate:hover {
+            background: #005ea6;
+            transform: translateY(-2px);
+        }
+
+        .crypto-box {
+            width: 100%;
+            padding: 15px;
+            background: #3a3a3a;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .crypto-box:hover {
+            background: #444;
+        }
+
+        .crypto-text {
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: #ddd;
+            word-break: break-all;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .copy-hint {
+            font-size: 0.8rem;
+            color: #aaa;
+            position: absolute;
+            bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-success {
+            font-size: 0.9rem;
+            color: #4CAF50;
+            font-weight: bold;
+            position: absolute;
+            bottom: 15px;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Animation styles */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse-animation {
+            animation: pulse 0.5s ease-in-out;
+        }
+        
+        @keyframes shine {
+            0% { background-position: -100% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .crypto-box {
+            width: 100%;
+            padding: 20px;
+            background: rgba(58, 58, 58, 0.7);
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Steam button styling */
+        .steam-btn {
+            background: linear-gradient(135deg, #171a21, #2a475e);
+            box-shadow: 0 4px 10px rgba(23, 26, 33, 0.5);
+        }
+        
+        .steam-btn:hover {
+            background: linear-gradient(135deg, #2a475e, #1b2838);
+            box-shadow: 0 6px 15px rgba(23, 26, 33, 0.6);
+        }
+        
+        .steam-btn::before {
+            background: linear-gradient(90deg, transparent, rgba(66, 223, 244, 0.2), transparent);
+        }
+        
+        .donation-icon .fa-steam {
+            background: linear-gradient(135deg, #66c0f4, #1b2838);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .section-spacer {
+            height: 100px;
+        }
+
+        /* Update Notification Styles */
+        .update-notification {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(10, 10, 15, 0.95);
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(108, 99, 255, 0.3);
+            z-index: 1000;
+            transform: translateX(-200%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--primary);
+            max-width: 280px;
+        }
+
+        .update-notification.show {
+            transform: translateX(0);
+        }
+
+        .update-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .update-icon {
+            font-size: 1rem;
+            animation: spin 4s linear infinite;
+            color: var(--primary);
+        }
+
+        .update-content p {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            line-height: 1.3;
+        }
+        
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Loader -->
+    <div class="page-loader">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <img src="https://pngimg.com/d/trollface_PNG29.png" alt="Troll Inc. Logo">
+                <span>Troll Inc.</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="#team">Our Team</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#donation">Donation</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="animate__animated animate__fadeInUp">Welcome to Troll Inc.</h1>
+            <p class="animate__animated animate__fadeInUp animate__delay-1s">Your Premier Destination for Professional Trolling Services</p>
+            <div class="hero-buttons animate__animated animate__fadeInUp animate__delay-2s">
+                <a href="#features" class="btn btn-primary">Explore Features</a>
+                <a href="#contact" class="btn btn-outline">Contact Us</a>
+            </div>
+        </div>
+        <div class="hero-background">
+            <div class="hero-shape"></div>
+            <div class="hero-particles"></div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title slide-up">Choose Your Destiny</h2>
+                <p class="section-subtitle slide-up">Click any mystery box... if you dare!</p>
+            </div>
+            
+            <div class="mystery-grid">
+                <button onclick="goToTrollPage(1)" class="mystery-box" data-tilt>
+                    <div class="mystery-content">
+                        <span class="question-mark">?</span>
+                        <div class="hover-effect"></div>
+                    </div>
+                </button>
+                <button onclick="goToTrollPage(2)" class="mystery-box" data-tilt>
+                    <div class="mystery-content">
+                        <span class="question-mark">?</span>
+                        <div class="hover-effect"></div>
+                    </div>
+                </button>
+                <button onclick="goToTrollPage(3)" class="mystery-box" data-tilt>
+                    <div class="mystery-content">
+                        <span class="question-mark">?</span>
+                        <div class="hover-effect"></div>
+                    </div>
+                </button>
+                <button onclick="goToTrollPage(4)" class="mystery-box" data-tilt>
+                    <div class="mystery-content">
+                        <span class="question-mark">?</span>
+                        <div class="hover-effect"></div>
+                    </div>
+                </button>
+                <button onclick="goToTrollPage(5)" class="mystery-box" data-tilt>
+                    <div class="mystery-content">
+                        <span class="question-mark">?</span>
+                        <div class="hover-effect"></div>
+                    </div>
+                </button>
+                <button onclick="goToTrollPage(6)" class="mystery-box" data-tilt>
+                    <div class="mystery-content">
+                        <span class="question-mark">?</span>
+                        <div class="hover-effect"></div>
+                    </div>
+                </button>
+            </div>
+
+            <div class="random-troll-button">
+                <button onclick="goToRandomTroll()" class="btn btn-gradient btn-lg animate__animated animate__pulse animate__infinite">
+                    <span>Surprise Me!</span>
+                    <i class="fas fa-dice"></i>
+                </button>
+            </div>
+
+            <div class="section-header">
+                <h2 class="section-title slide-up">Our Amazing Features</h2>
+                <p class="section-subtitle slide-up">Discover how our trolling solutions can transform your online presence</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card slide-up" style="animation-delay: 0.1s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-laugh-squint"></i>
+                    </div>
+                    <h3 class="feature-title">Premium Trolling</h3>
+                    <p>Our expert trolls provide top-tier services to keep your audience entertained and engaged with unexpected humor.</p>
+                </div>
+                <div class="feature-card slide-up" style="animation-delay: 0.2s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="feature-title">Viral Content</h3>
+                    <p>Create content that spreads like wildfire across social media platforms with our viral trolling techniques.</p>
+                </div>
+                <div class="feature-card slide-up" style="animation-delay: 0.3s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Safe Trolling</h3>
+                    <p>We ensure all our trolling services are ethical and harmless, providing humor without crossing boundaries.</p>
+                </div>
+                <div class="feature-card slide-up" style="animation-delay: 0.4s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">Analytics</h3>
+                    <p>Track the performance of your trolling campaigns with our advanced analytics dashboard.</p>
+                </div>
+                <div class="feature-card slide-up" style="animation-delay: 0.5s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">Community Building</h3>
+                    <p>Build a loyal community around your brand with our engagement-focused trolling strategies.</p>
+                </div>
+                <div class="feature-card slide-up" style="animation-delay: 0.6s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="feature-title">Customization</h3>
+                    <p>Tailor our trolling services to match your brand's voice and audience preferences.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-spacer"></div>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title slide-up">Featured Customer Reviews</h2>
+                <p class="section-subtitle slide-up">Testimonials from those who experienced our exceptional trolling services</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card slide-right" style="animation-delay: 0.1s;">
+                    <p class="testimonial-content">"والله العظيم ما توقعت أتعرض للترول بهذا الشكل! كنت أتصفح الإنترنت بهدوء وفجأة وجدت نفسي ضحية لأكثر عملية ترول احترافية في حياتي. ١٠/١٠ سأقع في نفس الفخ مرة أخرى!"</p>
+                    <div class="testimonial-author">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Bill_Gates%2C_September_2024.jpg/220px-Bill_Gates%2C_September_2024.jpg" alt="أبو شنب الغامق" class="author-image">
+                        <div class="author-info">
+                            <h4>أبو شنب الغامق</h4>
+                            <p>متصفح إنترنت محترف</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card slide-right" style="animation-delay: 0.2s;">
+                    <p class="testimonial-content">"كنت أعتقد أنني خبير في اكتشاف عمليات الترول حتى تعاملت مع هؤلاء المحترفين. لقد جعلوني أصدق أن القطط يمكنها التحدث بالعربية الفصحى. أنصح الجميع بتجربة خدماتهم الفريدة!"</p>
+                    <div class="testimonial-author">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Mark_Zuckerberg_F8_2019_Keynote_%2832830578717%29_%28cropped%29.jpg/220px-Mark_Zuckerberg_F8_2019_Keynote_%2832830578717%29_%28cropped%29.jpg" alt="عمو فاروق" class="author-image">
+                        <div class="author-info">
+                            <h4>عمو فاروق</h4>
+                            <p>مدير سوشيال ميديا سابق</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card slide-right" style="animation-delay: 0.3s;">
+                    <p class="testimonial-content">"بعد أن تعرضت للترول من قبل هذا الفريق المحترف، أصبحت أخاف من فتح أي رابط يرسله لي أصدقائي. لقد تعلمت درساً لن أنساه أبداً، وأنصح الجميع بالحذر من روابطهم المخادعة!"</p>
+                    <div class="testimonial-author">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Jeff_Bezos_visits_LAAFB_SMC_%283908618%29_%28cropped%29.jpeg/220px-Jeff_Bezos_visits_LAAFB_SMC_%283908618%29_%28cropped%29.jpeg" alt="أبو جبنة" class="author-image">
+                        <div class="author-info">
+                            <h4>أبو جبنة</h4>
+                            <p>ضحية ترول سابقة</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-5">
+                <a href="reviews.html" class="btn btn-gradient">
+                    <span>View More Reviews</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="team-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title slide-up">Meet Our Trolling Experts</h2>
+                <p class="section-subtitle slide-up">Our team of professional trolls is dedicated to providing the highest quality services</p>
+            </div>
+            <div class="team-grid">
+                <div class="team-card slide-up founder-card" style="animation-delay: 0.2s;">
+                    <img src="./images/deaa.png" alt="ضياء" class="team-image">
+                    <div class="team-info">
+                        <h3 class="team-name">ضياء</h3>
+                        <p class="team-role">Founder & CEO</p>
+                        <p>The visionary leader who brought professional trolling to the mainstream.</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-card slide-up" style="animation-delay: 0.3s;">
+                    <img src="https://as2.ftcdn.net/v2/jpg/01/34/51/81/1000_F_134518160_5DyP0y6YqXQgG6FdorIvpk7M6CBNrglm.jpg" alt="علي اللاجئ الهولندي" class="team-image">
+                    <div class="team-info">
+                        <h3 class="team-name">علي اللاجئ الهولندي</h3>
+                        <p class="team-role">Senior Troll Strategist</p>
+                        <p>International trolling expert with a unique Dutch-Arabic perspective.</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-card slide-up" style="animation-delay: 0.4s;">
+                    <img src="https://i.pinimg.com/736x/0c/d8/0f/0cd80f8c6764e7924fbaa9dc35a2ce13.jpg" alt="موبز" class="team-image">
+                    <div class="team-info">
+                        <h3 class="team-name">موبز</h3>
+                        <p class="team-role">Creative Troll Director</p>
+                        <p>The artistic genius behind our most viral trolling campaigns.</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-card slide-up" style="animation-delay: 0.5s;">
+                    <img src="./images/aboalias.png" alt="روح الكون" class="team-image">
+                    <div class="team-info">
+                        <h3 class="team-name">روح الكون</h3>
+                        <p class="team-role">Audio streamer</p>
+                        <p>Steaming and testing Headsets quality over discord screensharing</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Donation Section -->
+    <section id="donation" class="section">
+        <div class="container">
+            <div class="contact-container">
+                <h2 class="contact-title">Let's Connect</h2>
+                <p class="contact-subtitle">Reach out to me directly on Discord</p>
+                <div class="contact-content">
+                    <a href="https://discordapp.com/users/1064502659966582835" target="_blank" class="discord-link">
+                        <i class="fab fa-discord"></i>
+                        <span>Message Me</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <h2 class="section-title">For Gaza Children Donation | للتبرع لأطفال غزة</h2>
+            <p class="section-subtitle">Your support makes a difference | دَعمُك يُحدِثُ فرقًا</p>
+            
+            <div class="donation-grid">
+                <!-- PayPal -->
+                <div class="donation-card">
+                    <div class="donation-icon">
+                        <i class="fab fa-paypal"></i>
+                    </div>
+                    <h3>PayPal</h3>
+                    <a href="https://www.paypal.com/paypalme/x2de511" target="_blank" class="btn-donate">
+                        Donate via PayPal
+                    </a>
+                </div>
+                
+                <!-- Bitcoin -->
+                <div class="donation-card">
+                    <div class="donation-icon">
+                        <i class="fab fa-bitcoin"></i>
+                    </div>
+                    <h3>Bitcoin (BTC)</h3>
+                    <div class="crypto-box" onclick="copyToClipboard('148g9HUvTHHnemtzhiryyDRwpB4FmHGEgx', this)">
+                        <span class="crypto-text">148g9HUvTHHnemtzhiryyDRwpB4FmHGEgx</span>
+                        <span class="copy-hint">Click to copy</span>
+                        <span class="copy-success">Copied!</span>
+                    </div>
+                </div>
+                
+                <!-- Litecoin -->
+                <div class="donation-card">
+                    <div class="donation-icon">
+                        <img src="images/litecoin.png" alt="LTC" class="ltc-icon">
+                    </div>
+                    <h3>Litecoin (LTC)</h3>
+                    <div class="crypto-box" onclick="copyToClipboard('LSZ5gBSmy6qFHHpBLVgdM4XAzuEMmp5kJZ', this)">
+                        <span class="crypto-text">LSZ5gBSmy6qFHHpBLVgdM4XAzuEMmp5kJZ</span>
+                        <span class="copy-hint">Click to copy</span>
+                        <span class="copy-success">Copied!</span>
+                    </div>
+                </div>
+                
+                <!-- Steam -->
+                <div class="donation-card">
+                    <div class="donation-icon">
+                        <i class="fab fa-steam"></i>
+                    </div>
+                    <h3>Steam Trade</h3>
+                    <a href="https://steamcommunity.com/tradeoffer/new/?partner=393733394&token=UUY6Z6Mv" target="_blank" class="btn-donate steam-btn">
+                        Send Steam Items
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Update Notification -->
+    <div class="update-notification">
+        <div class="update-content">
+            <i class="fas fa-sync-alt update-icon"></i>
+            <p>Check back often for fresh trolling updates! ✨</p>
+        </div>
+    </div>
+
+    <!-- Chat widget -->
+    <div class="chat-widget" id="chatWidget" style="display: none;">
+        <div class="chat-header">
+            <span>ترول بوت 9000</span>
+            <span class="chat-close" onclick="closeChat()">×</span>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input">
+            <input type="text" id="messageInput" placeholder="اكتب رسالتك..." onkeypress="if(event.key === 'Enter') sendChatMessage()">
+            <button onclick="sendChatMessage()" class="send-button">ارسل</button>
+        </div>
+    </div>
+
+    <button class="chat-trigger" onclick="openChat()">
+        <i class="fas fa-comments"></i> تكلم مع ترول بوت
+    </button>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <h3>Troll Inc.</h3>
+                    <p>Professional trolling services since 2025</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#team">Team</a></li>
+                        <li><a href="reviews.html">Reviews</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-newsletter">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe for the latest trolling tips!</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Enter your email">
+                        <button type="submit" class="btn btn-gradient">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Troll Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Page Loader
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.querySelector('.page-loader').style.opacity = '0';
+                setTimeout(function() {
+                    document.querySelector('.page-loader').style.display = 'none';
+                }, 500);
+            }, 1000);
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+
+        // Smooth Scrolling for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Close mobile menu if open
+                if (navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    hamburger.classList.remove('active');
+                }
+
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Animation on Scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.slide-up, .slide-right, .fade-in');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementPosition < windowHeight - 100) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0) translateX(0)';
+                }
+            });
+        }
+
+        // Initialize animations
+        window.addEventListener('load', function() {
+            document.querySelectorAll('.slide-up, .slide-right, .fade-in').forEach(element => {
+                element.style.opacity = '0';
+                
+                if (element.classList.contains('slide-up')) {
+                    element.style.transform = 'translateY(30px)';
+                } else if (element.classList.contains('slide-right')) {
+                    element.style.transform = 'translateX(-30px)';
+                }
+                
+                element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+            
+            animateOnScroll();
+        });
+
+        window.addEventListener('scroll', animateOnScroll);
+
+        // Form Submission
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Thank you for your message! Our trolling experts will contact you soon.');
+                contactForm.reset();
+            });
+        }
+
+        // Newsletter Subscription
+        const newsletterForm = document.querySelector('.newsletter-form');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Thank you for subscribing to our newsletter!');
+                newsletterForm.reset();
+            });
+        }
+
+        function goToRandomTroll() {
+            const trollPages = [
+                './troll-pages/troll1.html',
+                './troll-pages/troll2.html',
+                './troll-pages/troll3.html',
+                './troll-pages/troll4.html',
+                './troll-pages/troll5.html',
+                './troll-pages/troll6.html',
+                './troll-pages/troll7.html',
+                './troll-pages/troll8.html',
+                './troll-pages/troll9.html',
+                './troll-pages/troll10.html',
+                './troll-pages/troll11.html',
+                './troll-pages/troll12.html',
+                './troll-pages/troll13.html'
+            ];
+            const randomPage = trollPages[Math.floor(Math.random() * trollPages.length)];
+            window.location.href = randomPage;
+        }
+
+        function goToTrollPage(number) {
+            window.location.href = `./troll-pages/troll${number}.html`;
+        }
+        
+        // Initialize chat elements after DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatWidget = document.getElementById('chatWidget');
+            const chatMessages = document.getElementById('chatMessages');
+            const chatInput = document.getElementById('messageInput');
+
+            // Make functions available in global scope
+            window.toggleChat = function() {
+                if (chatWidget.style.display === 'none') {
+                    chatWidget.style.display = 'flex';
+                    chatInput.focus();
+                    if (chatMessages.children.length === 0) {
+                        addChatMessage("يزم شو بدك؟", 'ai');
+                    }
+                } else {
+                    chatWidget.style.display = 'none';
+                }
+            };
+
+            window.addChatMessage = function(message, type) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `${type}-message`;
+                messageDiv.textContent = message;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            };
+
+            window.sendMessage = async function() {
+                const message = chatInput.value.trim();
+                if (!message) return;
+
+                // Add user message
+                addChatMessage(message, 'user');
+                chatInput.value = '';
+
+                try {
+                    const response = await fetch('http://localhost:3000/api/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ message })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to get response');
+                    }
+                    
+                    const data = await response.json();
+                    addChatMessage(data.response, 'ai');
+                } catch (error) {
+                    console.error('Chat error:', error);
+                    addChatMessage("يزم في مشكلة، جرب مرة ثانية", 'ai');
+                }
+            };
+        });
+    </script>
+    <script>
+        // Update notification
+        window.addEventListener('load', function() {
+            function showNotification() {
+                const notification = document.querySelector('.update-notification');
+                notification.classList.add('show');
+                
+                // Hide notification after 7 seconds
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    
+                    // Show notification again after 10 seconds
+                    setTimeout(showNotification, 10000);
+                }, 7000);
+            }
+            
+            // Start the notification loop after 2 seconds initial delay
+            setTimeout(showNotification, 2000);
+        });    
+    </script>
+    <script>
+        // Copy crypto address to clipboard with animation
+        function copyToClipboard(address, element) {
+            navigator.clipboard.writeText(address).then(() => {
+                // Hide hint and show success message
+                element.querySelector('.copy-hint').style.display = 'none';
+                element.querySelector('.copy-success').style.display = 'block';
+                
+                // Add pulse animation
+                element.classList.add('pulse-animation');
+                
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    element.querySelector('.copy-hint').style.display = 'block';
+                    element.querySelector('.copy-success').style.display = 'none';
+                    element.classList.remove('pulse-animation');
+                }, 2000);
+            });
+        }
+    </script>
+    <script>
+        // Troll responses by category
+        const TROLL_GREETINGS = [
+            "مرحبا يزم",
+            "شو بدك يزم",
+            "نور الموقع يزم",
+            "شو بدك يا معلم",
+            "اهلا وسهلا يزم",
+            "يا هلا بالغالي",
+            "منور يا باشا",
+            "اهلين يا حلو",
+            "يزم شرفت الموقع",
+            "هلا بالطيب",
+            "يا مرحبا يا مرحبا",
+            "هلا بهالطلة",
+            "شو هالنور يا معلم",
+            "اهلين وسهلين يزم",
+            "يا هلا بالضيف",
+            "نورت المكان يا باشا",
+            "يا مية الف هلا",
+            "هلا بالغالي",
+            "شو هالزيارة الحلوة",
+            "منور علينا يا معلم"
+        ];
+
+        const TROLL_REACTIONS = [
+            "مش سامعك يزم",
+            "شو بتحكي يزم",
+            "كلامك سليم يا معلم",
+            "مية بالمية معلم",
+            "اه",
+            "شو مالك",
+            "مالك يزم",
+            "يزم انت صح وانا صح",
+            "معك حق والله",
+            "كلام من ذهب يزم",
+            "يزم انت فهمان الشغل",
+            "والله انك عبقري",
+            "شو هالعقل يا معلم",
+            "يزم انت فاهم الدنيا",
+            "كلامك عين العقل",
+            "هاي الحكي ولا بلاش",
+            "انت بتفهم بالموضوع",
+            "شو هالتفكير يا معلم",
+            "عقلية جبارة والله",
+            "يزم انت استاذ",
+            "هيك لازم يكون الكلام",
+            "والله انك فاهمها صح",
+            "بتعرف شو بتحكي",
+            "كلام ما بينحكى عليه",
+            "يا سيدي يا سيدي",
+            "هاد الحكي الصح",
+            "شو هالفهم يا معلم",
+            "عندك حق والله",
+            "يزم انت عارف شو بتحكي",
+            "هيك بدها تكون الشغلة"
+        ];
+
+        const TROLL_COMMENTS = [
+            "يزم سؤال حلو تعال بعدين وبجاوبك",
+            "سؤال ممتاز",
+            "كلامك رائع يا زلمة",
+            "يزم بوتين احتل اوكرانيا من جمال منشورك",
+            "سؤال نادر من وين جبتو",
+            "اااه",
+            "يزم استغفر الله شو هاض الكلام",
+            "مية بالمية معلم",
+            "يزم انت عبقري العباقرة",
+            "من وين بتجيب هالافكار",
+            "يا سلام عليك يا معلم",
+            "هاي فكرة بتجنن يزم",
+            "يزم انت مخك كبير",
+            "شو هالابداع يا باشا",
+            "يزم هاي احلى من البيتزا",
+            "والله فكرة ما خطرت على بالي",
+            "يزم انت بتفكر خارج الصندوق",
+            "هاض الحكي بده يتكتب بالتاريخ",
+            "شو هالعبقرية يا معلم",
+            "يزم انت مخك بيلمع",
+            "هاي الافكار ولا بلاش",
+            "يا زلمة انت موسوعة",
+            "شو هالتفكير العميق",
+            "يزم انت فيلسوف العصر",
+            "كلام ما بينقال عليه",
+            "يزم هاي فكرة بتستاهل جائزة",
+            "شو هالذكاء يا معلم",
+            "هاض كلام ناس كبار",
+            "يزم انت بتفهم بالحياة",
+            "والله انك فيلسوف زمانك",
+            "هاي مش فكرة هاي كنز",
+            "يزم انت عندك مخ ذهب",
+            "شو هالتحليل العميق",
+            "يا معلم انت استاذ الكل",
+            "هاض الكلام بده يتعلم بالمدارس"
+        ];
+
+        function openChat() {
+            const chatWidget = document.getElementById('chatWidget');
+            const messageInput = document.getElementById('messageInput');
+            chatWidget.style.display = 'flex';
+            messageInput.focus();
+            
+            // Add welcome message if none exists
+            const chatMessages = document.getElementById('chatMessages');
+            if (chatMessages.children.length === 0) {
+                // Get random greeting
+                const greeting = TROLL_GREETINGS[Math.floor(Math.random() * TROLL_GREETINGS.length)];
+                addChatMessage(greeting, 'ai');
+            }
+        }
+
+        function closeChat() {
+            document.getElementById('chatWidget').style.display = 'none';
+        }
+
+        function addChatMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `${type}-message`;
+            messageDiv.textContent = message;
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendChatMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addChatMessage(message, 'user');
+            messageInput.value = '';
+
+            // Get random response from a random category
+            const categories = [TROLL_REACTIONS, TROLL_COMMENTS];
+            const selectedCategory = categories[Math.floor(Math.random() * categories.length)];
+            const response = selectedCategory[Math.floor(Math.random() * selectedCategory.length)];
+            
+            // Add small delay to simulate typing
+            setTimeout(() => {
+                addChatMessage(response, 'ai');
+            }, 500);
+        }
+    </script>
+    <script>
+        // Copy crypto address to clipboard
+        const cryptoAddresses = document.querySelectorAll('.crypto-address');
+
+        cryptoAddresses.forEach(address => {
+            address.addEventListener('click', function() {
+                const addressValue = address.getAttribute('data-address');
+                navigator.clipboard.writeText(addressValue).then(() => {
+                    address.nextElementSibling.style.opacity = 1;
+                    setTimeout(() => {
+                        address.nextElementSibling.style.opacity = 0;
+                    }, 2000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

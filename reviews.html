@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="See what our customers say about our professional trolling services. Read authentic reviews and testimonials.">
+    <meta name="keywords" content="troll, reviews, testimonials, customer feedback, professional trolling">
+    <meta name="author" content="Troll Inc.">
+    <title>Customer Reviews - Professional Troll Services</title>
+    <link rel="stylesheet" href="new-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="https://pngimg.com/d/trollface_PNG29.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        /* Reviews page specific styling */
+        .reviews-page-hero {
+            background: var(--gradient-primary);
+            padding: 8rem 0 4rem;
+            text-align: center;
+            color: var(--text-primary);
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .reviews-page-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--gradient-secondary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .reviews-page-hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .reviews-page-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+            opacity: 0.7;
+            z-index: 1;
+        }
+        
+        .reviews-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg);
+        }
+        
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .filter-button {
+            padding: 0.5rem 1.5rem;
+            background: var(--bg-elevated);
+            border: none;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            font-weight: bold;
+            transition: var(--transition-normal);
+            color: var(--text-secondary);
+        }
+        
+        .filter-button:hover, 
+        .filter-button.active {
+            background: var(--primary);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .review-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-light);
+        }
+        
+        .review-header {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .reviewer-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+            border: 2px solid var(--primary);
+        }
+        
+        .reviewer-info {
+            flex: 1;
+        }
+        
+        .reviewer-info h4 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+        
+        .review-stars {
+            color: var(--secondary);
+            margin-bottom: 0.3rem;
+        }
+        
+        .review-date {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        
+        .review-text {
+            padding: 1.5rem;
+            flex: 1;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+        
+        .review-service {
+            padding: 0 1.5rem 1.5rem;
+        }
+        
+        .service-used {
+            display: inline-block;
+            background: rgba(138, 43, 226, 0.2);
+            color: var(--primary-light);
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 4rem;
+            gap: 0.5rem;
+        }
+        
+        .pagination button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition-normal);
+        }
+        
+        .pagination button:hover,
+        .pagination button.active {
+            background: var(--primary);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        @media (max-width: 768px) {
+            .reviews-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .reviews-page-hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Loader -->
+    <div class="page-loader">
+        <div class="loader"></div>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <img src="https://pngimg.com/d/trollface_PNG29.png" alt="Troll Inc. Logo">
+                <span>Troll Inc.</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="reviews.html" class="active">Reviews</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+    
+    <section class="reviews-page-hero">
+        <div class="container">
+            <h1 class="slide-up">Customer Reviews</h1>
+            <p class="slide-up">Read what our clients say about our professional trolling services</p>
+        </div>
+        <div class="animated-bg">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+    </section>
+    
+    <main class="reviews-container">
+        <div class="filter-container slide-up">
+            <button class="filter-button active">All Reviews</button>
+            <button class="filter-button">Web Trolling</button>
+            <button class="filter-button">Marketing Trolling</button>
+            <button class="filter-button">Brand Trolling</button>
+            <button class="filter-button">SEO Trolling</button>
+            <button class="filter-button">Content Trolling</button>
+        </div>
+        
+        <div class="reviews-grid">
+            <!-- Review 1 -->
+            <div class="review-card slide-up" style="animation-delay: 0.1s;">
+                <div class="review-header">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Bill_Gates%2C_September_2024.jpg/220px-Bill_Gates%2C_September_2024.jpg" alt="أبو شنب الغامق" class="reviewer-image">
+                    <div class="reviewer-info">
+                        <h4>أبو شنب الغامق</h4>
+                        <div class="review-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="review-date">نُشر منذ أسبوعين</div>
+                    </div>
+                </div>
+                <div class="review-text">
+                    <p>والله العظيم ما توقعت أتعرض للترول بهذا الشكل! كنت أتصفح الإنترنت بهدوء وفجأة وجدت نفسي ضحية لأكثر عملية ترول احترافية في حياتي. أرسلوا لي رابط لصفحة تقول أنني ربحت مليون دولار، وبعد أن أدخلت كل بياناتي، ظهرت لي صورة قطة ترقص! ١٠/١٠ سأقع في نفس الفخ مرة أخرى!</p>
+                </div>
+                <div class="review-service">
+                    <span class="service-used">Deceptive Link Trolling</span>
+                </div>
+            </div>
+            
+            <!-- Review 2 -->
+            <div class="review-card slide-up" style="animation-delay: 0.2s;">
+                <div class="review-header">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Mark_Zuckerberg_F8_2019_Keynote_%2832830578717%29_%28cropped%29.jpg/220px-Mark_Zuckerberg_F8_2019_Keynote_%2832830578717%29_%28cropped%29.jpg" alt="عمو فاروق" class="reviewer-image">
+                    <div class="reviewer-info">
+                        <h4>عمو فاروق</h4>
+                        <div class="review-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="review-date">نُشر منذ شهر</div>
+                    </div>
+                </div>
+                <div class="review-text">
+                    <p>كنت أعتقد أنني خبير في اكتشاف عمليات الترول حتى تعاملت مع هؤلاء المحترفين. لقد جعلوني أصدق أن القطط يمكنها التحدث بالعربية الفصحى، وأنفقت أسبوعين كاملين وأنا أحاول التواصل مع قطتي! زوجتي تفكر في طلاقي الآن، لكن على الأقل لدي قصة مضحكة لأرويها. شكراً لكم على هذه التجربة الفريدة!</p>
+                </div>
+                <div class="review-service">
+                    <span class="service-used">Pet Trolling</span>
+                </div>
+            </div>
+            
+            <!-- Review 3 -->
+            <div class="review-card slide-up" style="animation-delay: 0.3s;">
+                <div class="review-header">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Jeff_Bezos_visits_LAAFB_SMC_%283908618%29_%28cropped%29.jpeg/220px-Jeff_Bezos_visits_LAAFB_SMC_%283908618%29_%28cropped%29.jpeg" alt="أبو كشة" class="reviewer-image">
+                    <div class="reviewer-info">
+                        <h4>أبو كشة</h4>
+                        <div class="review-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="review-date">نُشر منذ 3 أشهر</div>
+                    </div>
+                </div>
+                <div class="review-text">
+                    <p>طلبت من شركة ترول أن تساعدني في زيادة متابعيني على مواقع التواصل. قاموا بنشر إشاعة أنني أملك قدرات خارقة وأستطيع التنبؤ بنتائج مباريات كرة القدم! الآن لدي 50 ألف متابع، وكلهم يطلبون مني توقعات للمباريات القادمة. أصبح أقضي ساعات يومياً في البحث عن إحصائيات كرة القدم. هذا ليس ما توقعته، لكنه نجح!</p>
+                </div>
+                <div class="review-service">
+                    <span class="service-used">Social Media Trolling</span>
+                </div>
+            </div>
+            
+            <!-- Review 4 -->
+            <div class="review-card slide-up" style="animation-delay: 0.4s;">
+                <div class="review-header">
+                    <img src="https://dfjx2uxqg3cgi.cloudfront.net/img/photo/136776/136776_00_2x.jpg?20171214201934" alt="سلطان الفلفل الحار" class="reviewer-image">
+                    <div class="reviewer-info">
+                        <h4>سلطان الفلفل الحار</h4>
+                        <div class="review-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="review-date">نُشر منذ شهرين</div>
+                    </div>
+                </div>
+                <div class="review-text">
+                    <p>قررت تجربة خدمة "ترول الطعام" من هذه الشركة. أرسلوا لي وصفة طبخ تبدو لذيذة، لكنها كانت تحتوي على كميات مضاعفة من الفلفل الحار! أصبحت معروفاً بين أصدقائي بـ"سلطان الفلفل الحار" بعد أن دعوتهم لتناول هذا الطبق. لم أستطع تذوق أي شيء لمدة أسبوع، لكن الضحكات كانت تستحق ذلك!</p>
+                </div>
+                <div class="review-service">
+                    <span class="service-used">Food Trolling</span>
+                </div>
+            </div>
+            
+            <!-- Review 5 -->
+            <div class="review-card slide-up" style="animation-delay: 0.5s;">
+                <div class="review-header">
+                    <img src="https://i.pinimg.com/736x/a4/e4/a5/a4e4a57a8530dd41503b63c4424d30e3.jpg" alt="إيميلي روبرتسون" class="reviewer-image">
+                    <div class="reviewer-info">
+                        <h4>إيميلي روبرتسون</h4>
+                        <div class="review-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="review-date">نُشر منذ أسبوع</div>
+                    </div>
+                </div>
+                <div class="review-text">
+                    <p>ما زلت غير متأكدة مما إذا كان توظيف شركة ترول لإعادة تصميم علامتنا التجارية كان عبقريًا أم جنونًا. اقترحوا تغيير شعار شركتنا الاستشارية المالية الجادة ليشمل وجه ترول خفي في التصميم. لم يلاحظ أحد لمدة 3 أشهر، ولكن عندما أشار إليه شخص ما على تويتر، أصبحنا فيروسيين. زادت استفسارات العملاء الجدد بنسبة 200٪.</p>
+                </div>
+                <div class="review-service">
+                    <span class="service-used">Brand Redesign</span>
+                </div>
+            </div>
+            
+            <!-- Review 6 -->
+            <div class="review-card slide-up" style="animation-delay: 0.6s;">
+                <div class="review-header">
+                    <img src="https://preview.redd.it/g8qo5k8rtmm91.jpg?width=640&crop=smart&auto=webp&s=1df0421a7e78250a0ebbacd21dbf58a5a7506c14" alt="سارة المتسوقة" class="reviewer-image">
+                    <div class="reviewer-info">
+                        <h4>سارة المتسوقة</h4>
+                        <div class="review-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="review-date">نُشر منذ 5 أيام</div>
+                    </div>
+                </div>
+                <div class="review-text">
+                    <p>أدارت شركة ترول حملة توعية بيئية لمنظمتي غير الربحية. قاموا بتصميم سلسلة من الإعلانات التي تستخدم شخصيات الميمات الشهيرة للتحدث عن تغير المناخ. كانت النتائج مذهلة - زادت التبرعات بنسبة 250٪ وأصبحت رسالتنا تصل إلى جمهور أصغر سنًا لم نتمكن من الوصول إليه من قبل. التسويق المبتكر في أفضل حالاته!</p>
+                </div>
+                <div class="review-service">
+                    <span class="service-used">Non-Profit Marketing</span>
+                </div>
+            </div>
+            
+            <!-- Review 7 (New) -->
+            <div class="review-card slide-up" style="animation-delay: 0.7s;">
+                <div class="review-header">
+                    <img src="https://i.pinimg.com/736x/f5/27/41/f52741fb62bf1d821948a49204406bdc.jpg" alt="محمد العبدالله" class="reviewer-image">
+                    <div class="reviewer-info">
+                        <h4>محمد العبدالله</h4>
+                        <div class="review-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="review-date">نُشر منذ 3 أسابيع</div>
+                    </div>
+                </div>
+                <div class="review-text">
+                    <p>كنت متشككًا في البداية، لكن فريق ترول تجاوز توقعاتي بكثير. قاموا بإنشاء حملة تسويقية لمطعمي تضمنت قائمة طعام مع أسماء أطباق مضحكة تستند إلى ميمات الإنترنت. أصبح المطعم الآن وجهة التقاط صور انستغرام المفضلة في المدينة، وزادت المبيعات بنسبة 70٪. شكرًا لكم على الإبداع الرائع!</p>
+                </div>
+                <div class="review-service">
+                    <span class="service-used">Creative Marketing</span>
+                </div>
+            </div>
+            
+            <!-- Review 8 (New) -->
+            <div class="review-card slide-up" style="animation-delay: 0.8s;">
+                <div class="review-header">
+                    <img src="./images/abuamir.jpg" alt="فاطمة الزهراء" class="reviewer-image">
+                    <div class="reviewer-info">
+                        <h4>فاطمة الزهراء</h4>
+                        <div class="review-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <div class="review-date">نُشر منذ شهر</div>
+                    </div>
+                </div>
+                <div class="review-text">
+                    <p>استعنت بشركة ترول لتصميم موقع إلكتروني لمتجر الحلويات الخاص بي. أضافوا ميزة تجعل الكعك "يهرب" من المؤشر عندما يحاول المستخدمون النقر عليه، ثم يظهر نص يقول "لا يمكنك أكلي!" قبل أن يعود إلى مكانه. العملاء يحبون هذا، وأصبح متجري الآن مشهورًا على تيك توك بسبب هذه الميزة المضحكة.</p>
+                </div>
+                <div class="review-service">
+                    <span class="service-used">Interactive Web Design</span>
+                </div>
+            </div>
+            
+            <!-- Review 9 (New) -->
+            <div class="review-card slide-up" style="animation-delay: 0.9s;">
+                <div class="review-header">
+                    <img src="./images/24.jpg" alt="خالد المنصوري" class="reviewer-image">
+                    <div class="reviewer-info">
+                        <h4>خالد المنصوري</h4>
+                        <div class="review-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="review-date">نُشر منذ أسبوعين</div>
+                    </div>
+                </div>
+                <div class="review-text">
+                    <p>يزم الخدمة هاي أسطورية، لازم تجربها! أنا وصاحبي قلنا نجربها على كم ولد، سوينا إعلان عن "باص الحلا" يزم، كتبنا عليه "حلويات مجانية للأطفال". الولاد ركضوا علينا بدون تفكير، دخلوا الباص، وقبل ما يفهموا إيش صاير، الباب تسكر لحاله!</p>
+                </div>
+                <div class="review-service">
+                    <span class="service-used">User Experience Enhancement</span>
+                </div>
+            </div>
+            
+            <!-- Review 10 (New) -->
+            <div class="review-card slide-up" style="animation-delay: 1s;">
+                <div class="review-header">
+                    <img src="./images/sub.jpg" alt="نورا الحربي" class="reviewer-image">
+                    <div class="reviewer-info">
+                        <h4>نورا الحربي</h4>
+                        <div class="review-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="review-date">نُشر منذ 3 أيام</div>
+                    </div>
+                </div>
+                <div class="review-text">
+                    <p>استعنت بشركة ترول لتحسين مشاركة الموظفين في شركتي. قاموا بإنشاء نظام مكافآت داخلي يعتمد على "اقتصاد الميمات" حيث يمكن للموظفين كسب وإنفاق "عملات الميمات" على مكافآت حقيقية. أصبحت اجتماعات الفريق أكثر متعة، وانخفض معدل دوران الموظفين بنسبة 40٪. حل إبداعي لمشكلة شائعة!</p>
+                </div>
+                <div class="review-service">
+                    <span class="service-used">HR Consulting</span>
+                </div>
+            </div>
+            
+            <!-- Review 11 (New) -->
+            <div class="review-card slide-up" style="animation-delay: 1.1s;">
+                <div class="review-header">
+                    <img src="./images/qassim.png" alt="أحمد الشمري" class="reviewer-image">
+                    <div class="reviewer-info">
+                        <h4>أحمد الشمري</h4>
+                        <div class="review-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="review-date">نُشر منذ شهر</div>
+                    </div>
+                </div>
+                <div class="review-text">
+                    <p>كمدرس جامعي، كنت أبحث عن طرق لجعل محاضراتي أكثر جاذبية. اقترح فريق ترول إنشاء مجموعة من "الشرائح المخفية" التي تظهر فقط عندما يبدأ الطلاب في فقدان الاهتمام (بناءً على تحليل لغة الجسد). تحتوي هذه الشرائح على ميمات مضحكة متعلقة بالمادة. ارتفعت درجات الطلاب بنسبة 30٪ وأصبحت محاضراتي الأكثر شعبية في الكلية!</p>
+                </div>
+                <div class="review-service">
+                    <span class="service-used">Innovative Educational Media</span>
+                </div>
+            </div>
+            
+            <!-- Review 12 (New) -->
+            <div class="review-card slide-up" style="animation-delay: 1.2s;">
+                <div class="review-header">
+                    <img src="./images/layla.jpg" alt="ليلى القحطاني" class="reviewer-image">
+                    <div class="reviewer-info">
+                        <h4>ليلى القحطاني</h4>
+                        <div class="review-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="review-date">نُشر منذ أسبوع</div>
+                    </div>
+                </div>
+                <div class="review-text">
+                    <p>استعنت بشركة ترول لإنشاء حملة توعية بيئية لمنظمتي غير الربحية. قاموا بتصميم سلسلة من الإعلانات التي تستخدم شخصيات الميمات الشهيرة للتحدث عن تغير المناخ. كانت النتائج مذهلة - زادت التبرعات بنسبة 250٪ وأصبحت رسالتنا تصل إلى جمهور أصغر سنًا لم نتمكن من الوصول إليه من قبل. التسويق المبتكر في أفضل حالاته!</p>
+                </div>
+                <div class="review-service">
+                    <span class="service-used">Non-Profit Marketing</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pagination slide-up">
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>4</button>
+            <button><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">Troll Inc.</div>
+                    <p>Bringing humor and unexpected surprises to your online presence since 2023.</p>
+                    <div class="social-icons">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#features">Features</a></li>
+                        <li><a href="reviews.html">Reviews</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Web Trolling</a></li>
+                        <li><a href="#">Marketing Trolling</a></li>
+                        <li><a href="#">Brand Trolling</a></li>
+                        <li><a href="#">SEO Trolling</a></li>
+                        <li><a href="#">Content Trolling</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Contact Us</h3>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Troll Avenue, Internet City</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@trollinc.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Troll Inc. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Page Loader
+        window.addEventListener('load', function() {
+            document.querySelector('.page-loader').style.display = 'none';
+        });
+        
+        // Mobile Menu Toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+        
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Filter Buttons
+        const filterButtons = document.querySelectorAll('.filter-button');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                // Add filter functionality here
+            });
+        });
+        
+        // Pagination
+        const paginationButtons = document.querySelectorAll('.pagination button');
+        
+        paginationButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                paginationButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                // Add pagination functionality here
+            });
+        });
+        
+        // Animation on Scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.slide-up, .slide-right, .fade-in');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animated');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            elements.forEach(element => {
+                observer.observe(element);
+            });
+        }
+        
+        // Initialize animations
+        window.addEventListener('load', function() {
+            document.querySelectorAll('.slide-up, .slide-right, .fade-in').forEach(element => {
+                element.style.opacity = '0';
+            });
+            
+            setTimeout(() => {
+                animateOnScroll();
+            }, 500);
+        });
+    </script>
+</body>
+</html>
