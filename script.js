@@ -630,7 +630,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('click', function(e) {
             if (e.target === scannerModal) {
                 scannerModal.style.display = 'none';
-            }
+            });
         });
     }
     
@@ -714,7 +714,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('click', function(e) {
             if (e.target === termsModal) {
                 termsModal.style.display = 'none';
-            }
+            });
         });
         
         // Accept button troll
@@ -819,4 +819,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-}); 
+});
+
+// Analytics module for visitor tracking
+document.addEventListener('DOMContentLoaded', function() {
+    // Google Analytics is already configured in the <head> section
+    // This is just a placeholder for any additional analytics you might want to add
+    
+    // Log page view to console in debug mode
+    if (localStorage.getItem('debug_mode')) {
+        console.log('Page viewed:', window.location.pathname);
+        console.log('Screen size:', window.screen.width, 'x', window.screen.height);
+    }
+});

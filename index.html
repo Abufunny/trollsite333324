@@ -18,6 +18,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K7MQL1TP79"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-K7MQL1TP79');
+    </script>
     <style>
         :root {
             --primary-color: #093670;
@@ -25,6 +34,17 @@
             --dark-bg: #1a1a1a;
             --light-text: #ffffff;
             --border-color: #333;
+        }
+
+        /* Bouncing trollface animation */
+        .bouncing-troll {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            z-index: 999;
+            pointer-events: auto; /* Changed from 'none' to 'auto' to enable clicking */
+            animation: none; /* Remove previous animation */
+            cursor: pointer; /* Add cursor pointer to indicate it's clickable */
         }
 
         /* Chat widget styles */
@@ -41,6 +61,15 @@
             flex-direction: column;
             z-index: 1000;
             border: 1px solid var(--border-color);
+        }
+
+        /* Mobile-responsive chat widget */
+        @media (max-width: 480px) {
+            .chat-widget {
+                width: calc(100% - 40px);
+                height: 350px;
+                bottom: 70px;
+            }
         }
 
         .chat-trigger {
@@ -60,6 +89,14 @@
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s;
+        }
+
+        /* Mobile-responsive chat trigger */
+        @media (max-width: 480px) {
+            .chat-trigger {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
         }
 
         .chat-trigger:hover {
@@ -302,6 +339,19 @@
             padding: 40px 0;
             width: 100%;
             perspective: 1000px;
+        }
+
+        /* Mobile-responsive donation grid */
+        @media (max-width: 768px) {
+            .donation-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .donation-card {
+                width: 100%;
+                max-width: 320px;
+            }
         }
 
         .donation-card {
@@ -861,6 +911,149 @@
                 transform: rotate(360deg);
             }
         }
+
+        /* Mystery grid responsiveness */
+        @media (max-width: 768px) {
+            .mystery-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+            }
+            
+            .mystery-box {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .mystery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+        }
+
+        /* Responsive hero section */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .hero-buttons .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+
+        /* Responsive testimonial section */
+        @media (max-width: 768px) {
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        /* Responsive team section */
+        @media (max-width: 768px) {
+            .team-grid {
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 20px;
+            }
+            
+            .team-image {
+                height: auto;
+            }
+        }
+
+        /* Mobile nav menu improvements */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 10px 15px;
+            }
+            
+            .nav-links {
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background-color: rgba(26, 26, 26, 0.95);
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+                gap: 15px;
+            }
+            
+            .nav-links.active {
+                transform: translateY(0);
+            }
+            
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+            
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+            
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -6px);
+            }
+        }
+        
+        /* Responsive footer */
+        @media (max-width: 768px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .footer-links, .footer-newsletter {
+                text-align: center;
+            }
+            
+            .footer-social {
+                justify-content: center;
+            }
+            
+            .newsletter-form {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .newsletter-form .btn {
+                width: 100%;
+            }
+        }
+
+        /* Banner size adjustments for mobile */
+        @media (max-width: 480px) {
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .section-subtitle {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Update notification adjustments for mobile */
+        @media (max-width: 480px) {
+            .update-notification {
+                max-width: calc(100% - 40px);
+                top: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1223,6 +1416,14 @@
     <button class="chat-trigger" onclick="openChat()">
         <i class="fas fa-comments"></i> تكلم مع ترول بوت
     </button>
+
+    <!-- Bouncing Trollface -->
+    <img src="images/trollface-troll-orb.gif" alt="Bouncing Trollface" class="bouncing-troll">
+    
+    <!-- Knock sound audio element -->
+    <audio id="knockSound" preload="auto">
+        <source src="https://www.myinstants.com/media/sounds/knock-3d.mp3" type="audio/mpeg">
+    </audio>
 
     <!-- Footer -->
     <footer class="site-footer">
@@ -1650,6 +1851,62 @@
                         address.nextElementSibling.style.opacity = 0;
                     }, 2000);
                 });
+            });
+        });
+    </script>
+    
+    <script>
+        // Bouncing trollface animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const troll = document.querySelector('.bouncing-troll');
+            const knockSound = document.getElementById('knockSound');
+            const trollWidth = 60;
+            const trollHeight = 60;
+            
+            // Set initial position
+            let x = Math.random() * (window.innerWidth - trollWidth);
+            let y = Math.random() * (window.innerHeight - trollHeight);
+            
+            // Set random speed (px per frame)
+            let dx = (Math.random() * 2 + 1) * (Math.random() > 0.5 ? 1 : -1);
+            let dy = (Math.random() * 2 + 1) * (Math.random() > 0.5 ? 1 : -1);
+            
+            // Add click event to play sound
+            troll.addEventListener('click', function() {
+                // Play knock sound
+                knockSound.currentTime = 0; // Reset sound to beginning
+                knockSound.play();
+            });
+            
+            function animate() {
+                // Update position
+                x += dx;
+                y += dy;
+                
+                // Bounce off walls
+                if (x <= 0 || x >= window.innerWidth - trollWidth) {
+                    dx = -dx;
+                }
+                if (y <= 0 || y >= window.innerHeight - trollHeight) {
+                    dy = -dy;
+                }
+                
+                // Apply new position
+                troll.style.left = x + 'px';
+                troll.style.top = y + 'px';
+                
+                // Continue animation
+                requestAnimationFrame(animate);
+            }
+            
+            // Start animation
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                // Keep troll in bounds after resize
+                if (x > window.innerWidth - trollWidth) x = window.innerWidth - trollWidth;
+                if (y > window.innerHeight - trollHeight) y = window.innerHeight - trollHeight;
             });
         });
     </script>
